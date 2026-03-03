@@ -77,38 +77,41 @@ function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
   <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
   <script>
-    document.getElementById("payBtn").addEventListener("click", function () {
-      if (typeof IMP === "undefined") {
-        alert("결제 모듈(IMP) 로드 실패");
-        return;
+  document.getElementById("payBtn").addEventListener("click", function () {
+    if (typeof IMP === "undefined") {
+      alert("결제 모듈(IMP) 로드 실패");
+      return;
+    }
+
+    IMP.init("imp10721361");
+
+    const merchant_uid = <?= json_encode($merchant_uid) ?>;
+    const amount = <?= (int)$pay_amount ?>;
+
+    IMP.request_pay({
+      pg: "kakaopay.TC0ONETIME",
+      pay_method: "card",
+      merchant_uid: merchant_uid,
+      name: "전자기기 쇼핑몰 주문",
+      amount: amount,
+      buyer_name: "테스트구매자",
+      buyer_tel: "010-0000-0000",
+
+      // ✅ 모바일 결제 필수 (SDK 1.1.8+)
+      m_redirect_url: "https://<?= $_SERVER['HTTP_HOST'] ?>/electronics_shop/payment/payment_verify.php"
+    }, function (rsp) {
+      console.log("[PAY] rsp:", rsp);
+
+      if (rsp.success) {
+        location.href =
+          "payment_verify.php?imp_uid=" + encodeURIComponent(rsp.imp_uid) +
+          "&merchant_uid=" + encodeURIComponent(rsp.merchant_uid);
+      } else {
+        alert("결제 취소/실패: " + (rsp.error_msg || "알 수 없는 오류"));
+        location.href = "../order/checkout.php";
       }
-
-      IMP.init("imp10721361");
-
-      const merchant_uid = <?= json_encode($merchant_uid) ?>;
-      const amount = <?= (int)$pay_amount ?>;
-
-      IMP.request_pay({
-        pg: "kakaopay.TC0ONETIME",
-        pay_method: "card",
-        merchant_uid: merchant_uid,
-        name: "전자기기 쇼핑몰 주문",
-        amount: amount,
-        buyer_name: "테스트구매자",
-        buyer_tel: "010-0000-0000"
-      }, function (rsp) {
-        console.log("[PAY] rsp:", rsp);
-
-        if (rsp.success) {
-          location.href =
-            "payment_verify.php?imp_uid=" + encodeURIComponent(rsp.imp_uid) +
-            "&merchant_uid=" + encodeURIComponent(rsp.merchant_uid);
-        } else {
-          alert("결제 취소/실패: " + (rsp.error_msg || "알 수 없는 오류"));
-          location.href = "../order/checkout.php";
-        }
-      });
     });
+  });
   </script>
 </body>
 </html>
