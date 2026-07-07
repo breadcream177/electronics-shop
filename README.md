@@ -1,5 +1,7 @@
 # Electronics Shop
 
+<img width="1936" height="1344" alt="image" src="https://github.com/user-attachments/assets/834581f7-7aaf-497b-a078-1984ea423976" />
+
 PHP와 MySQL로 구현한 전자제품 쇼핑몰 개인 프로젝트입니다. 일반적인 REST API 서버가 아니라, PHP 페이지와 Form 요청을 중심으로 동작하는 서버 렌더링 방식의 쇼핑몰입니다.
 
 상품 목록, 상품 상세, 장바구니, 위시리스트, 주문, PortOne/Iamport 기반 카카오페이 결제 검증, 리뷰, Q&A, 비회원 문의, 관리자 주문 관리 기능을 구현했습니다.
